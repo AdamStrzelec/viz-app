@@ -119,19 +119,30 @@ export default function ApiReferencePage() {
           ))}
           <button className="chip" onClick={() => sendFilter({ type: 'CLEAR' })}>clear</button>
         </div>
-        <div className="api-list">
-          {visible.map((e) => (
-            <div key={e.name} className="api-card">
-              <div className="api-card-head">
-                <strong>{e.name}</strong>
-                <span className="muted">{e.category}</span>
-                {e.replacement && <span className="badge no">deprecated → {e.replacement}</span>}
+        {categories.map((category) => {
+          const entries = visible.filter((e) => e.category === category)
+          if (entries.length === 0) return null
+          return (
+            <section key={category} className="api-group">
+              <h3 className="api-group-title">
+                {category} <span className="muted">{entries.length}</span>
+              </h3>
+              <div className="api-list">
+                {entries.map((e) => (
+                  <div key={e.name} className="api-card">
+                    <div className="api-card-head">
+                      <strong>{e.name}</strong>
+                      {e.replacement && <span className="badge no">deprecated → {e.replacement}</span>}
+                    </div>
+                    <code>{e.signature}</code>
+                    <span className="muted">{e.description}</span>
+                  </div>
+                ))}
               </div>
-              <code>{e.signature}</code>
-              <span className="muted">{e.description}</span>
-            </div>
-          ))}
-        </div>
+            </section>
+          )
+        })}
+        {visible.length === 0 && <span className="muted">No matches.</span>}
       </Example>
     </>
   )

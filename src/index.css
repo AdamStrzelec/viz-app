@@ -13,14 +13,18 @@
   --code-text: #c9d1f5;
   --radius: 14px;
   --glow: #e9e9ff;
-  --ok-bg: var(--ok-bg);
-  --ok-text: var(--ok-text);
-  --warn-bg: var(--warn-bg);
-  --warn-text: var(--warn-text);
-  --unknown-bg: var(--unknown-bg);
-  --off-bg: var(--off-bg);
-  --board-bg: var(--board-bg);
-  --gate: var(--gate);
+  --ok-bg: #e6f7f3;
+  --ok-text: #0b7a6c;
+  --warn-bg: #fff1e6;
+  --warn-text: #c2410c;
+  --unknown-bg: #fdf6dc;
+  --off-bg: #eceef5;
+  --board-bg: #f8f9fd;
+  --gate: #c2415f;
+  --git-branch-1: #5b5bd6;
+  --git-branch-2: #12a594;
+  --git-branch-3: #d97706;
+  --git-branch-4: #d9507a;
 }
 
 :root[data-theme='dark'] {
@@ -44,6 +48,10 @@
   --off-bg: #262a3d;
   --board-bg: #161927;
   --gate: #e38a9b;
+  --git-branch-1: #8b8bf0;
+  --git-branch-2: #2cc5b2;
+  --git-branch-3: #f5a524;
+  --git-branch-4: #f07fa1;
 }
 
 * { box-sizing: border-box; }
@@ -100,7 +108,7 @@ pre {
 }
 
 button {
-  padding: 8px 14px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  padding: 6px 14px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
   font: inherit; font-size: 0.88rem; font-weight: 500; cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
 }
@@ -277,3 +285,131 @@ button.danger { background: var(--warn-bg); border-color: #fdba74; color: var(--
 .api-group { width: 100%; display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
 .api-group-title { margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); display: flex; align-items: baseline; gap: 8px; }
 .api-group-title .muted { margin: 0; font-size: 0.72rem; }
+
+/* Git workflow: merge diagram */
+.merge-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; width: 100%; }
+.merge-flow[role='group'] { flex-wrap: nowrap; }
+.merge-flow[role='group'] .merge-node { padding: 6px 10px; font-size: 0.85rem; }
+.merge-node { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--off-bg); color: var(--muted); font-weight: 600; font-size: 0.9rem; transition: background 0.25s, border-color 0.25s, color 0.25s; }
+.merge-node.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 3px #5b5bd622; }
+.merge-node.active.conflicted { background: var(--warn-bg); border-color: #ea580c; color: var(--warn-text); }
+.merge-node.active.merged { background: var(--ok-bg); border-color: var(--accent-2); color: var(--ok-text); }
+.merge-arrow { color: var(--muted); font-size: 0.8rem; }
+.merge-arrow.locked { color: var(--warn-text); }
+.merge-arrow.open { color: var(--ok-text); font-weight: 700; }
+.conflict-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; width: 100%; }
+.conflict-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn-text); transition: background 0.25s, color 0.25s; }
+.conflict-item.resolved { background: var(--ok-bg); color: var(--ok-text); }
+.conflict-item code { flex: 1; }
+.merge-reason { width: 100%; font-size: 0.85rem; }
+@media (prefers-reduced-motion: reduce) { .merge-node, .conflict-item, .meter > div { transition: none; } }
+
+/* Git workflow: file zones */
+.file-zones { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; min-height: 120px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.file-zone { display: flex; flex-direction: column; gap: 2px; padding: 10px; font-size: 0.8rem; }
+.file-zone.wt { background: var(--unknown-bg); }
+.file-zone.index { background: var(--accent-soft); }
+.file-zone.repo { background: var(--ok-bg); }
+.file-tile {
+  position: absolute; top: 58px; width: calc(100% / 3 - 16px); padding: 6px 8px; border-radius: 8px; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  transition: left 0.35s ease-out, background 0.25s;
+}
+.file-tile.untracked { border-style: dashed; border-color: var(--muted); }
+.file-tile.dirty { border-color: #ea580c; }
+.file-tile.staged { border-color: var(--accent); }
+.file-tile.clean { border-color: var(--accent-2); }
+.file-tile.ghost { top: 92px; opacity: 0.8; animation: pop 0.3s ease-out; }
+.file-badge { font-weight: 700; font-size: 0.72rem; }
+.file-states { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+.file-cmds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; width: 100%; }
+button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(--off-bg); border: 1px dashed var(--muted); color: var(--muted); opacity: 0.6; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .file-tile { transition: none; animation: none; } }
+
+/* Git workflow: branch graph */
+.git-graph-scroll { width: 100%; min-height: 400px; overflow-x: auto; }
+.git-graph { display: block; max-width: none; }
+.git-edge { fill: none; stroke-width: 3; stroke-linecap: round; }
+.git-edge.second { stroke-dasharray: 5 4; }
+.git-edge.dim, .git-commit.dim { opacity: 0.35; }
+.git-merge-ring { fill: none; stroke-width: 2; }
+.git-commit-id { fill: var(--muted); font-size: 11px; }
+.git-pointer { stroke: var(--muted); stroke-width: 1.5; }
+.git-pill rect { fill: var(--surface); stroke: var(--border); stroke-width: 2; }
+.git-pill text { fill: var(--text); font-size: 11px; font-weight: 600; }
+.git-pill.head rect { fill: var(--text); stroke: var(--text); }
+.git-pill.head text { fill: var(--surface); }
+.git-pill.head-detached rect { fill: var(--warn-bg); stroke: #ea580c; }
+.git-pill.head-detached text { fill: var(--warn-text); }
+
+.git-hit { fill: transparent; }
+.git-commit[role='button'], .git-pill.clickable { cursor: pointer; }
+.git-commit[role='button']:hover circle:not(.git-hit):not(.git-merge-ring) { stroke: var(--text); stroke-width: 2; }
+.git-pill.clickable:hover rect { fill: var(--accent-soft); }
+.git-graph g[role='button']:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Git workflow: graph motion */
+.git-pill { transition: transform 0.4s ease-out; }
+.git-commit { transform-box: fill-box; transform-origin: center; animation: git-node-in 0.35s ease-out; }
+.git-edge { stroke-dasharray: 1; animation: git-edge-draw 0.45s ease-out; }
+.git-edge.second { stroke-dasharray: 0.06 0.05; animation: git-edge-fade 0.45s ease-out; }
+@keyframes git-node-in { from { opacity: 0; transform: scale(0.4); } }
+@keyframes git-edge-draw { from { stroke-dashoffset: 1; } }
+@keyframes git-edge-fade { from { opacity: 0; } }
+.merge-preview { font-size: 0.72rem; opacity: 0.75; }
+@media (prefers-reduced-motion: reduce) { .git-pill { transition: none; } .git-commit, .git-edge, .git-edge.second { animation: none; } }
+
+/* Git workflow: small screens + log */
+.git-log { width: 100%; }
+.git-log summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+@media (max-width: 420px) {
+  main { padding: 16px; grid-template-columns: minmax(0, 1fr); }
+  .file-zone { padding: 6px; font-size: 0.7rem; }
+  .file-tile { font-size: 0.7rem; padding: 4px 6px; }
+}
+
+/* Git workflow: diagram cards size to their content instead of stretching with the row */
+.example:has(.merge-flow, .file-zones) { align-self: start; }
+
+/* Git workflow: contrast fixes for the light theme (measured below 4.5:1) */
+.file-zone .muted { color: var(--text); }
+.merge-node { color: color-mix(in srgb, var(--text) 80%, var(--off-bg)); }
+
+/* Git workflow: action buttons with a description next to each */
+.git-actions { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: center; width: 100%; }
+.git-actions button, .git-actions button:first-child { background: var(--accent); border-color: var(--accent); color: white; justify-self: start; }
+.git-actions button:hover:not(:disabled) { background: #4a4ac4; border-color: #4a4ac4; color: white; }
+.git-actions .muted { font-size: 0.85rem; }
+
+/* Git workflow: grouped controls (checkout / merge) */
+.git-group { display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.git-group > strong { font-size: 0.85rem; }
+.git-group .muted { font-size: 0.82rem; }
+
+/* Git workflow: make checkout / merge sections and their chips stand out */
+.git-group { background: var(--accent-soft); border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border)); padding: 14px 16px; gap: 8px; }
+.git-group .chip, .git-group .chip:first-child {
+  padding: 9px 18px; font-size: 0.85rem; background: var(--surface); color: var(--text);
+  border: 2px solid color-mix(in srgb, var(--accent) 70%, white);
+}
+.git-group .chip:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: white; }
+.git-group .chip:disabled { background: var(--surface); border-style: dashed; border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); opacity: 0.7; }
+.git-group .event-picker { gap: 10px; }
+
+/* Git workflow: branch switcher label + active branch */
+.git-group .picker-label { align-self: center; font-size: 0.95rem; letter-spacing: 0.01em; }
+.git-group .chip.active, .git-group .chip.active:first-child, .git-group .chip.active:hover:not(:disabled) {
+  background: #f4f5fa; color: #1c2033; border-color: var(--accent); font-weight: 700;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.example-actions { margin-left: auto; }
+.git-history { display: flex; align-items: center; gap: 10px; }
+.git-steps { font-weight: 700; font-size: 0.95rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.git-history button:disabled { opacity: 1; background: transparent; border: 2px dashed color-mix(in srgb, var(--text) 45%, transparent); color: color-mix(in srgb, var(--text) 60%, transparent); cursor: not-allowed; }
+
+/* Git workflow: command buttons — equal width, centered text, description vertically centered, boxed section */
+.git-actions { grid-template-columns: 17rem 1fr; align-items: center; padding: 14px 16px; border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.git-actions button, .git-actions button:first-child { justify-self: stretch; width: 100%; margin: 0; text-align: center; justify-content: center; white-space: nowrap; }
+.git-actions .muted { align-self: center; margin: 0; line-height: 1.4; }

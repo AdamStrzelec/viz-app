@@ -9,7 +9,7 @@ const PAD_BOTTOM = 28
 
 export type GraphNode = { id: string; x: number; y: number; lane: number; merge: boolean }
 export type GraphEdge = { from: string; to: string; secondParent: boolean }
-export type Label = { text: string; kind: 'branch' | 'branch-active' | 'head' | 'head-detached' }
+export type Label = { text: string; kind: 'branch' | 'branch-active' | 'remote' | 'remote-live' | 'head' | 'head-detached' }
 export type GraphLayout = {
   nodes: GraphNode[]
   edges: GraphEdge[]
@@ -20,7 +20,14 @@ export type GraphLayout = {
 }
 
 // Pure layout: x = topological depth, y = lane. Commits must be ordered parents-first.
-export function layoutGraph(commits: Commit[], branches: Record<string, string>, head: Head): GraphLayout {
+// `remoteRefs` are remote-tracking pointers (origin/<name>); `remoteAhead` are tips on the server that were not fetched yet.
+export function layoutGraph(
+  commits: Commit[],
+  branches: Record<string, string>,
+  head: Head,
+  remoteRefs: Record<string, string> = {},
+  remoteAhead: Record<string, string> = {},
+): GraphLayout {
   const depth = new Map<string, number>()
   const lane = new Map<string, number>()
   const children = new Map<string, number>()
@@ -47,6 +54,8 @@ export function layoutGraph(commits: Commit[], branches: Record<string, string>,
   for (const [name, id] of Object.entries(branches)) {
     if (name !== activeName) push(id, { text: name, kind: 'branch' })
   }
+  for (const [name, id] of Object.entries(remoteRefs)) push(id, { text: `origin/${name}`, kind: 'remote' })
+  for (const [name, id] of Object.entries(remoteAhead)) push(id, { text: `☁ origin/${name}`, kind: 'remote-live' })
   if (head.kind === 'branch') {
     push(branches[head.name], { text: head.name, kind: 'branch-active' })
     push(branches[head.name], { text: 'HEAD', kind: 'head' })

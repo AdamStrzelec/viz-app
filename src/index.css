@@ -413,3 +413,11 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 .git-actions { grid-template-columns: 17rem 1fr; align-items: center; padding: 14px 16px; border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
 .git-actions button, .git-actions button:first-child { justify-self: stretch; width: 100%; margin: 0; text-align: center; justify-content: center; white-space: nowrap; }
 .git-actions .muted { align-self: center; margin: 0; line-height: 1.4; }
+
+/* Remote repo: remote-tracking pills, not-yet-fetched commits, pull requests */
+.git-pill.remote rect { fill: transparent; stroke-dasharray: 4 3; }
+.git-pill.remote text { fill: var(--muted); }
+.git-pill.remote-live rect { fill: transparent; stroke: var(--accent); stroke-dasharray: 2 3; }
+.git-pill.remote-live text { fill: var(--accent); }
+.pr-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pr-item { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }

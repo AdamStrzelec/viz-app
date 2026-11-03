@@ -1,5 +1,5 @@
 import { useMemo, type KeyboardEvent } from 'react'
-import { ancestors, headCommitId, type BranchesContext } from '../../machines/git.machine'
+import { ancestors, type Commit, type Head } from '../../machines/git.machine'
 import { PILL_HEIGHT, RADIUS, layoutGraph, type Label } from './graphLayout'
 
 const laneColor = (lane: number) => `var(--git-branch-${(lane % 4) + 1})`
@@ -35,10 +35,22 @@ function Pill({ label, x, y, color, onCheckout }: { label: Label; x: number; y: 
   )
 }
 
-export function BranchGraph({ context, onCheckout }: { context: BranchesContext; onCheckout: (target: string) => void }) {
-  const { commits, branches, head } = context
-  const layout = useMemo(() => layoutGraph(commits, branches, head), [commits, branches, head])
-  const reachable = useMemo(() => ancestors(commits, headCommitId(context)), [commits, context])
+type GraphProps = {
+  commits: Commit[]
+  branches: Record<string, string>
+  head: Head
+  // origin/<name> pointers as the local repo knows them
+  remoteRefs: Record<string, string>
+  // branch tips on the server that differ from remoteRefs (not fetched yet)
+  remoteAhead: Record<string, string>
+  // commits that exist only on the remote
+  ghost: Set<string>
+  onCheckout: (target: string) => void
+}
+
+export function BranchGraph({ commits, branches, head, remoteRefs, remoteAhead, ghost, onCheckout }: GraphProps) {
+  const layout = useMemo(() => layoutGraph(commits, branches, head, remoteRefs, remoteAhead), [commits, branches, head, remoteRefs, remoteAhead])
+  const reachable = useMemo(() => ancestors(commits, head.kind === 'branch' ? branches[head.name] : head.id), [commits, branches, head])
   const byId = new Map(layout.nodes.map((n) => [n.id, n]))
 
   const summary =
@@ -68,7 +80,7 @@ export function BranchGraph({ context, onCheckout }: { context: BranchesContext;
                 key={`${e.from}-${e.to}`}
                 d={d}
                 pathLength={1}
-                className={['git-edge', e.secondParent && 'second', !reachable.has(e.to) && 'dim'].filter(Boolean).join(' ')}
+                className={['git-edge', e.secondParent && 'second', !reachable.has(e.to) && !ghost.has(e.to) && 'dim'].filter(Boolean).join(' ')}
                 style={{ stroke: laneColor(e.secondParent ? from.lane : to.lane) }}
               />
             )
@@ -77,16 +89,23 @@ export function BranchGraph({ context, onCheckout }: { context: BranchesContext;
           {layout.nodes.map((n) => (
             <g
               key={n.id}
-              className={reachable.has(n.id) ? 'git-commit' : 'git-commit dim'}
-              role="button"
-              tabIndex={0}
-              aria-label={`checkout commit ${n.id}`}
-              onClick={() => onCheckout(n.id)}
-              onKeyDown={onActivate(() => onCheckout(n.id))}
+              className={ghost.has(n.id) ? 'git-commit ghost' : reachable.has(n.id) ? 'git-commit' : 'git-commit dim'}
+              {...(!ghost.has(n.id) && {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': `checkout commit ${n.id}`,
+                onClick: () => onCheckout(n.id),
+                onKeyDown: onActivate(() => onCheckout(n.id)),
+              })}
             >
               <circle cx={n.x} cy={n.y} r={22} className="git-hit" />
               {n.merge && <circle cx={n.x} cy={n.y} r={RADIUS + 4} className="git-merge-ring" style={{ stroke: laneColor(n.lane) }} />}
-              <circle cx={n.x} cy={n.y} r={RADIUS} style={{ fill: laneColor(n.lane) }} />
+              <circle
+                cx={n.x}
+                cy={n.y}
+                r={RADIUS}
+                style={ghost.has(n.id) ? { fill: 'transparent', stroke: laneColor(n.lane), strokeWidth: 2, strokeDasharray: '3 3' } : { fill: laneColor(n.lane) }}
+              />
               <text x={n.x} y={n.y + RADIUS + 16} textAnchor="middle" className="git-commit-id">{n.id}</text>
             </g>
           ))}

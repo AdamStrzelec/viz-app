@@ -9,6 +9,7 @@ import MoreApiPage from './pages/MoreApiPage'
 import ReleasePage from './pages/ReleasePage'
 import GatesGamePage from './pages/GatesGamePage'
 import GitWorkflowPage from './pages/GitWorkflowPage'
+import SshForcedCommandPage from './pages/SshForcedCommandPage'
 import ApiReferencePage from './pages/ApiReferencePage'
 
 const pages = [
@@ -21,6 +22,7 @@ const pages = [
   { path: '/release', label: 'Release model', element: <ReleasePage />, group: 'Projects' },
   { path: '/gates', label: 'Logic gates game', element: <GatesGamePage />, group: 'Projects' },
   { path: '/git-workflow', label: 'Git workflow', element: <GitWorkflowPage />, group: 'Projects' },
+  { path: '/ssh-gate', label: 'SSH forced command', element: <SshForcedCommandPage />, group: 'Projects' },
   { path: '/api-reference', label: 'API reference', element: <ApiReferencePage />, group: 'Reference' },
 ]
 

@@ -421,3 +421,36 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 .git-pill.remote-live text { fill: var(--accent); }
 .pr-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .pr-item { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+/* SSH forced command page */
+.ssh-settings { width: 100%; display: grid; gap: 8px; }
+.ssh-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; width: 100%; }
+.ssh-key { width: 40px; font: 600 0.7rem ui-monospace, Menlo, monospace; text-transform: uppercase; color: var(--muted); }
+.ssh-cmdline { width: 100%; padding: 8px 12px; border-radius: 9px; background: var(--code-bg); color: var(--code-text); font-size: 0.85rem; overflow-x: auto; }
+.ssh-pipeline { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; counter-reset: stage; }
+.ssh-stage { position: relative; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; gap: 4px; font-size: 0.84rem; transition: background 0.2s, border-color 0.2s; }
+.ssh-stage::before { counter-increment: stage; content: counter(stage); font: 700 0.7rem ui-monospace, Menlo, monospace; color: var(--muted); }
+.ssh-stage span { color: var(--muted); font-size: 0.76rem; }
+.ssh-stage em { font-size: 0.74rem; color: var(--accent-2); font-style: normal; font-weight: 600; }
+.ssh-stage.active { background: var(--accent-soft); border-color: var(--accent); box-shadow: 0 0 0 3px #5b5bd622; }
+.ssh-stage.failed { background: var(--warn-bg); border-color: #ea580c; }
+.ssh-stage.skipped { opacity: 0.5; border-style: dashed; }
+.ssh-touch { animation: shake 0.3s infinite; }
+.ssh-socket { width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ssh-socket .badge:not(.ok):not(.no) { background: var(--off-bg); color: var(--muted); }
+.ssh-files { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.ssh-file-label { display: block; font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-family: ui-monospace, Menlo, monospace; }
+.ssh-keys { white-space: pre-wrap; word-break: break-all; }
+.ssh-keys .hit { background: #12a59455; outline: 1px solid var(--accent-2); border-radius: 3px; }
+.ssh-steps { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 4px; font-size: 0.82rem; }
+.ssh-steps li { padding: 6px 10px; border-radius: 8px; word-break: break-word; }
+.ssh-steps li.ok { background: var(--ok-bg); color: var(--ok-text); }
+.ssh-steps li.no { background: var(--warn-bg); color: var(--warn-text); }
+.ssh-out { width: 100%; }
+.ssh-out.bad { color: #fb923c; }
+.ssh-script { width: 100%; font-size: 0.74rem; }
+.ssh-direction { width: 100%; display: flex; align-items: center; gap: 10px; }
+.ssh-direction.off { opacity: 0.55; }
+.ssh-box { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-weight: 600; font-size: 0.85rem; display: flex; flex-direction: column; gap: 2px; }
+.ssh-box small { font-weight: 400; color: var(--muted); font-size: 0.74rem; }
+.ssh-arrow { font: 600 0.8rem ui-monospace, Menlo, monospace; color: var(--accent); white-space: nowrap; }

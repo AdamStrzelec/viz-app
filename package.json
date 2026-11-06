@@ -11,6 +11,7 @@
     "feedback": "node scripts/feedback-server.mjs"
   },
   "dependencies": {
+    "@lucasmarkes/hairline": "^0.5.1",
     "@reviewjs/annotate": "^1.6.0",
     "@statelyai/inspect": "^0.7.2",
     "@xstate/react": "^6.1.0",

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 
-type Props = { title: string; description: string; state: unknown; children: ReactNode; wide?: boolean; actions?: ReactNode }
+type Props = { title: string; description: string; state: unknown; children: ReactNode; wide?: boolean; actions?: ReactNode; className?: string }
 
-export function Example({ title, description, state, children, wide, actions }: Props) {
+export function Example({ title, description, state, children, wide, actions, className }: Props) {
   return (
-    <section className={wide ? 'example wide' : 'example'}>
+    <section className={['example', wide && 'wide', className].filter(Boolean).join(' ')}>
       <header className="example-header">
         <span className="example-dot" />
         <h2>{title}</h2>

@@ -49,6 +49,7 @@ Host wt-forge
   return (
     <Example
       wide
+      className="ssh-simulator"
       title="Symulator połączenia ssh"
       description="Dwa aliasy, ten sam użytkownik forge. Klucz, którym się uwierzytelnisz, wybiera linię w authorized_keys: YubiKey daje pełny shell, klucz ograniczony zawsze trafia do gate. Spróbuj ControlPath współdzielonego: najpierw wt-forge, potem forge."
       state={{ value: snapshot.value, socket: ctx.socket, session: ctx.session, reused: ctx.reused }}
@@ -83,7 +84,7 @@ Host wt-forge
           </button>
         </div>
         <div className="ssh-row">
-          <span className="ssh-key">cmd</span>
+          <span className="ssh-key ssh-key-cmd">cmd</span>
           <input value={ctx.command} disabled={busy} onChange={(e) => send({ type: 'SET_COMMAND', command: e.target.value })} aria-label="Komenda" />
           <button disabled={busy} onClick={() => send({ type: 'RUN' })}>Uruchom</button>
         </div>
@@ -200,8 +201,8 @@ exec ${profile.binary} "\${args[@]:1}"`
         ))}
       </div>
       <ul className="ssh-steps">
-        {result.steps.map((st) => (
-          <li key={st.label} className={st.ok ? 'ok' : 'no'}><code>{st.label}</code> {st.detail}</li>
+        {result.steps.map((st, i) => (
+          <li key={st.label} className={[st.ok ? 'ok' : 'no', i === 0 && 'ssh-step-first'].filter(Boolean).join(' ')}><code>{st.label}</code> {st.detail}</li>
         ))}
       </ul>
       <span className={`badge ${result.allowed ? 'ok' : 'no'}`}>{result.allowed ? 'przepuszczone' : 'odrzucone, exit 1'}</span>

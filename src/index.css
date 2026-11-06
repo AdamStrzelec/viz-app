@@ -75,7 +75,8 @@ nav a {
 nav a:hover { background: var(--bg); color: var(--text); }
 nav .nav-group { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; border-top: 1px solid var(--border); }
 nav .nav-group:first-of-type { border-top: none; padding-top: 0; }
-.nav-group-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0 12px 4px; }
+.nav-group-label { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; padding: 0 12px 4px; }
+:root[data-theme='dark'] .nav-group-label { color: #e2e8f0; }
 nav .theme-toggle, nav .theme-toggle:first-child { margin-top: auto; background: var(--bg); border-color: var(--border); color: var(--text); }
 nav a.active { background: var(--accent-soft); color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
 
@@ -454,3 +455,9 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 .ssh-box { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-weight: 600; font-size: 0.85rem; display: flex; flex-direction: column; gap: 2px; }
 .ssh-box small { font-weight: 400; color: var(--muted); font-size: 0.74rem; }
 .ssh-arrow { font: 600 0.8rem ui-monospace, Menlo, monospace; color: var(--accent); white-space: nowrap; }
+
+/* Annotation feedback (ssh-gate, 2026-11-06) */
+.ssh-simulator .example-header { background: #7c3aed33; border-radius: 8px; padding: 4px 8px; }
+.ssh-key.ssh-key-cmd { color: #dc2626; }
+.ssh-steps li.ssh-step-first { background: #f9731633; color: inherit; }
+.ssh-script { background: #8882; }

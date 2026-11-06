@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "feedback": "node scripts/feedback-server.mjs"
   },
   "dependencies": {
+    "@reviewjs/annotate": "^1.6.0",
     "@statelyai/inspect": "^0.7.2",
     "@xstate/react": "^6.1.0",
     "react": "^19.3.1",

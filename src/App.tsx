@@ -1,5 +1,6 @@
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { useTheme } from './useTheme'
+import FeedbackLayer from './components/FeedbackLayer'
 import BasicsPage from './pages/BasicsPage'
 import ContextGuardsPage from './pages/ContextGuardsPage'
 import HierarchyPage from './pages/HierarchyPage'
@@ -33,6 +34,7 @@ export default function App() {
 
   return (
     <div className="layout">
+      {import.meta.env.DEV && <FeedbackLayer />}
       <nav>
         <h1>viz-app</h1>
         {groups.map((group) => (

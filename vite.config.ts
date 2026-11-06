@@ -4,4 +4,8 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    // Forward annotate "Send feedback" to the local receiver (npm run feedback)
+    proxy: { '/feedback': 'http://127.0.0.1:8787' },
+  },
 })

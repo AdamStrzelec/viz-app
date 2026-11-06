@@ -1,11 +1,20 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+import { createFeedbackHandler } from './scripts/feedback-server.mjs'
+
+// Serves POST /feedback from the dev server itself, so `npm run dev` also runs the annotation receiver
+function feedbackReceiver(): Plugin {
+  return {
+    name: 'feedback-receiver',
+    apply: 'serve',
+    configureServer(server) {
+      const handle = createFeedbackHandler()
+      server.middlewares.use('/feedback', (req, res) => void handle(req, res))
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    // Forward annotate "Send feedback" to the local receiver (npm run feedback)
-    proxy: { '/feedback': 'http://127.0.0.1:8787' },
-  },
+  plugins: [react(), feedbackReceiver()],
 })

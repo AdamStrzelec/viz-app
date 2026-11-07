@@ -461,3 +461,4 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 .ssh-key.ssh-key-cmd { color: #dc2626; }
 .ssh-steps li.ssh-step-first { background: #f9731633; color: inherit; }
 .ssh-script { background: #8882; }
+.recipe-flow { margin: 0; padding-left: 18px; }

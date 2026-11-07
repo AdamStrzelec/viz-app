@@ -2,6 +2,7 @@ import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { useTheme } from './useTheme'
 import FeedbackLayer from './components/FeedbackLayer'
 import BasicsPage from './pages/BasicsPage'
+import BlocksPage from './pages/BlocksPage'
 import ContextGuardsPage from './pages/ContextGuardsPage'
 import HierarchyPage from './pages/HierarchyPage'
 import AsyncActorsPage from './pages/AsyncActorsPage'
@@ -20,6 +21,7 @@ const pages = [
   { path: '/async-actors', label: 'Async & actors', element: <AsyncActorsPage />, group: 'Examples' },
   { path: '/inspector', label: 'Inspector', element: <InspectorPage />, group: 'Examples' },
   { path: '/more-api', label: 'More API', element: <MoreApiPage />, group: 'Examples' },
+  { path: '/blocks', label: 'Bloki i sekwencje', element: <BlocksPage />, group: 'Examples' },
   { path: '/release', label: 'Release model', element: <ReleasePage />, group: 'Projects' },
   { path: '/gates', label: 'Logic gates game', element: <GatesGamePage />, group: 'Projects' },
   { path: '/git-workflow', label: 'Git workflow', element: <GitWorkflowPage />, group: 'Projects' },

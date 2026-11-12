@@ -458,9 +458,6 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 
 /* Annotation feedback (ssh-gate, 2026-11-06) */
 .ssh-simulator .example-header { background: #7c3aed33; border-radius: 8px; padding: 4px 8px; }
-.ssh-key.ssh-key-cmd { color: #dc2626; }
-.ssh-steps li.ssh-step-first { background: #f9731633; color: inherit; }
-.ssh-script { background: #8882; }
 
 /* Engine logic page */
 .eng-lanes { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }

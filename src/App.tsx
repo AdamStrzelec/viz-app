@@ -1,6 +1,8 @@
+import { lazy, Suspense } from 'react'
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { useTheme } from './useTheme'
-import FeedbackLayer from './components/FeedbackLayer'
+// TEMP disabled: @reviewjs/annotate feedback layer
+// import FeedbackLayer from './components/FeedbackLayer'
 import BasicsPage from './pages/BasicsPage'
 import BlocksPage from './pages/BlocksPage'
 import ContextGuardsPage from './pages/ContextGuardsPage'
@@ -14,6 +16,12 @@ import GitWorkflowPage from './pages/GitWorkflowPage'
 import SshForcedCommandPage from './pages/SshForcedCommandPage'
 import EngineLogicPage from './pages/EngineLogicPage'
 import ApiReferencePage from './pages/ApiReferencePage'
+
+// Dev-only visual review (Agentation + tmux). The condition is static, so production builds drop the import.
+const visualReviewOn = import.meta.env.DEV && import.meta.env.VITE_VISUAL_REVIEW === '1' && Boolean(import.meta.env.VITE_AGENTATION_ENDPOINT)
+const VisualReview = visualReviewOn
+  ? lazy(() => import('./dev/visual-review/VisualReview').then((m) => ({ default: m.VisualReview })))
+  : null
 
 const pages = [
   { path: '/basics', label: 'Basics', element: <BasicsPage />, group: 'Examples' },
@@ -38,7 +46,12 @@ export default function App() {
 
   return (
     <div className="layout">
-      {import.meta.env.DEV && <FeedbackLayer />}
+      {/* {import.meta.env.DEV && <FeedbackLayer />} */}
+      {VisualReview && (
+        <Suspense fallback={null}>
+          <VisualReview endpoint={import.meta.env.VITE_AGENTATION_ENDPOINT} path={import.meta.env.VITE_VISUAL_REVIEW_PATH} />
+        </Suspense>
+      )}
       <nav>
         <h1>viz-app</h1>
         {groups.map((group) => (

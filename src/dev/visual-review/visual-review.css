@@ -1,0 +1,41 @@
+/* Dev-only Tailwind for the visual review panel. No preflight (app CSS stays untouched); only classes used in
+   VisualReview.tsx are generated. Token values are set inline on the panel from the Agentation toolbar theme. */
+@layer theme, base, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "./VisualReview.tsx";
+
+@theme inline {
+  --color-page: var(--bg-page);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-selected: var(--surface-selected);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-border: var(--border-default);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-inverse: var(--text-inverse);
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.4;
+}
+
+/* Minimal scoped reset in place of preflight (base layer, so utilities win). */
+@layer base {
+[data-vr-root] *,
+[data-vr-root] *::before,
+[data-vr-root] *::after {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+}
+[data-vr-root] button,
+[data-vr-root] input,
+[data-vr-root] textarea {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+}
+[data-vr-root] ul {
+  list-style: none;
+  padding: 0;
+}
+}

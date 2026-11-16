@@ -670,10 +670,10 @@ button.file-cmd.blocked, button.file-cmd.blocked:first-child { background: var(-
 .lab-cfg-text[readonly] { opacity: 0.7; }
 .lab-cfg-ok { margin: 0; font-size: 0.78rem; color: var(--ok-text); }
 .lab-cfg-diags { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 0.78rem; }
-.lab-cfg-diags li { padding: 3px 8px; border-left: 3px solid var(--border); border-radius: 0 6px 6px 0; background: var(--surface); }
-.lab-cfg-diags li.error { border-left-color: #dc2626; background: var(--warn-bg); color: var(--warn-text); }
-.lab-cfg-diags li.warn { border-left-color: #d97706; }
-.lab-cfg-diags li.info { border-left-color: var(--muted); color: var(--muted); }
+.lab-cfg-diags li { padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.lab-cfg-diags li.error { border-color: #dc2626; background: var(--warn-bg); color: var(--warn-text); }
+.lab-cfg-diags li.warn { border-color: #d97706; }
+.lab-cfg-diags li.info { color: var(--muted); }
 .lab-cfg-diags code { font-size: 0.72rem; margin-right: 4px; }
 .lab-cfg-alert { margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-text); font-size: 0.8rem; line-height: 1.45; }
 .lab-cfg-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }

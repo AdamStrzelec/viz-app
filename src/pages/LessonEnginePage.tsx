@@ -56,7 +56,7 @@ function PipelineSection() {
     value === 'published' ? 'opublikowana · exit 0' : value === 'rejected' ? 'needs_attention · exit 1 (brak publikacji)' : value === 'crashed' ? 'awaria narzędzia · exit 2' : 'w toku'
 
   return (
-    <Example
+    <Example className="le-section"
       wide
       title="a. Produkcja lekcji: bin/lekcja → bramka → publikacja"
       description="Każdy etap to stan maszyny. G3–ZAKRES zbierają uwagi w jednym przebiegu (bramka nie przerywa na pierwszym błędzie, poza wyjątkiem = exit 2). bin/lekcja bramka zatrzymuje się na czerwonym werdykcie — audyt sensu i publikacja nie ruszają."
@@ -220,7 +220,7 @@ function RuntimeSection() {
   const can = (e: Parameters<typeof send>[0]) => snapshot.can(e)
 
   return (
-    <Example
+    <Example className="le-section"
       wide
       title="b–c. Runtime ucznia: kartoteka SRS (Leitner) w czasie"
       description="Maszyna wzorowana na pakiety/lekcja-ui/src/lib/srs.ts. Klikaj eventy ręcznie albo odtwarzaj preset (Dalej / Auto). Każda ocena: trafienie → box+1, ok+1, due = teraz + BOX[box] dni; błąd → box 0, ok 0, zle+1."
@@ -328,7 +328,7 @@ function RuntimeSection() {
 
 function OutputsSection() {
   return (
-    <Example wide title="d. Co wychodzi na końcu" description="Dwa niezależne wyjścia: pliki w repo (produkcja) i localStorage przeglądarki ucznia (runtime)." state={null}>
+    <Example className="le-section" wide title="d. Co wychodzi na końcu" description="Dwa niezależne wyjścia: pliki w repo (produkcja) i localStorage przeglądarki ucznia (runtime)." state={null}>
       <div className="le-out-grid">
         <div className="le-out">
           <h3 className="le-h3">Produkcja (exit 0)</h3>
@@ -354,7 +354,7 @@ function OutputsSection() {
 
 function NotesSection() {
   return (
-    <Example wide title="e. Rozbieżności i znane błędy" description="Z porównania lekcje/_silnik/demo/index.html (v2) z pakiety/lekcja-ui/src/lib/srs.ts." state={null}>
+    <Example className="le-section" wide title="e. Rozbieżności i znane błędy" description="Z porównania lekcje/_silnik/demo/index.html (v2) z pakiety/lekcja-ui/src/lib/srs.ts." state={null}>
       <ul className="le-notes">
         <li><b>due po błędzie:</b> v2 <code>ocen()</code> i <code>bieg()</code> ustawiają <code>due = teraz() + 600000</code> (10 min); React <code>rate()</code> liczy <code>now + SRS_INTERVALS[0] * DAY</code> = teraz. Przełącznik „due po błędzie” wyżej pokazuje obie wersje.</li>
         <li><b>bieg nie woła akt():</b> <code>bieg().dalej()</code> ocenia inline (kopiuje logikę <code>ocen</code>) bez <code>akt('ocena:…')</code>, więc powtórki nie ruszają paska „Przerobione”. Kolokwium idzie przez <code>ocen()</code> i akty dokłada.</li>

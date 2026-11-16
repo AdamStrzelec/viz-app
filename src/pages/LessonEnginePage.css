@@ -75,3 +75,6 @@
 @media (prefers-reduced-motion: reduce) {
   .le-stage, .le-box, .le-bar-fill, .le-tl-due { transition: none; }
 }
+/* Stack section content vertically; global .controls is a wrapping row. */
+.le-section .controls { flex-direction: column; align-items: stretch; }
+.le-section .controls > * { width: 100%; }

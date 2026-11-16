@@ -1,6 +1,6 @@
 import { execFile, spawn } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -26,7 +26,24 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const PANE_ID = /^%\d{1,6}$/
 const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/
 
-type ChatMessage = { id: string; role: 'human' | 'agent'; content: string; timestamp: number }
+type ChatMessage = { id: string; role: 'human' | 'agent'; content: string; timestamp: number; contextLeft?: number }
+
+// Newest context snapshot written by .claude/statusline.sh (one file per Claude session). Returns % of context left.
+async function contextLeft(root: string): Promise<number | undefined> {
+  const dir = join(root, '.claude/.context-usage')
+  try {
+    let newest: { used_percentage?: number; updated_at?: number } | undefined
+    for (const name of await readdir(dir)) {
+      if (!name.endsWith('.json')) continue
+      const snap = JSON.parse(await readFile(join(dir, name), 'utf8')) as { used_percentage?: number; updated_at?: number }
+      if ((snap.updated_at ?? 0) > (newest?.updated_at ?? 0)) newest = snap
+    }
+    if (typeof newest?.used_percentage !== 'number') return undefined
+    return Math.max(0, Math.round(100 - newest.used_percentage))
+  } catch {
+    return undefined
+  }
+}
 
 type Env = Record<string, string | undefined>
 
@@ -138,8 +155,9 @@ function startAgentation(server: ViteDevServer, env: Env) {
 
 export function visualReview(env: Env): Plugin {
   const chat: ChatMessage[] = []
-  const addChat = (role: ChatMessage['role'], content: string) => {
-    chat.push({ id: randomUUID(), role, content, timestamp: Date.now() })
+  let root = process.cwd()
+  const addChat = (role: ChatMessage['role'], content: string, extra?: Partial<ChatMessage>) => {
+    chat.push({ id: randomUUID(), role, content, timestamp: Date.now(), ...extra })
     if (chat.length > MAX_MESSAGES) chat.splice(0, chat.length - MAX_MESSAGES)
   }
 
@@ -180,7 +198,7 @@ export function visualReview(env: Env): Plugin {
     if (body.role !== 'agent' || typeof body.content !== 'string') return json(res, 400, { error: 'bad request' })
     const content = body.content.trim().slice(0, MAX_REPLY)
     if (!content) return json(res, 400, { error: 'empty' })
-    addChat('agent', content)
+    addChat('agent', content, { contextLeft: await contextLeft(root) })
     json(res, 200, { ok: true })
   }
 
@@ -204,6 +222,7 @@ export function visualReview(env: Env): Plugin {
     apply: 'serve',
     configureServer(server) {
       if (env.VITE_VISUAL_REVIEW !== '1') return
+      root = server.config.root
       startAgentation(server, env)
       server.middlewares.use(BASE, (req, res, next) => {
         const route = `${req.method} ${(req.url ?? '').split('?')[0]}`

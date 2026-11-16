@@ -12,6 +12,8 @@ type ThreadMessage = {
   role: "human" | "agent";
   content: string;
   timestamp: number;
+  /** % of Claude's context window left when the reply was sent (chat replies only). */
+  contextLeft?: number;
 };
 type ReviewAnnotation = {
   id: string;
@@ -1014,6 +1016,14 @@ function AgentReplies({ endpoint, path }: { endpoint: string; path: string }) {
                 <span className="whitespace-pre-wrap break-words">
                   {m.content}
                 </span>
+                {m.role === "agent" && m.contextLeft !== undefined ? (
+                  <span
+                    className="mt-1 block text-[10px] text-text-secondary"
+                    title="Wolny kontekst sesji Claude w chwili odpowiedzi"
+                  >
+                    kontekst: {m.contextLeft}% wolne
+                  </span>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -16,6 +16,7 @@ import GitWorkflowPage from './pages/GitWorkflowPage'
 import SshForcedCommandPage from './pages/SshForcedCommandPage'
 import EngineLogicPage from './pages/EngineLogicPage'
 import ApiReferencePage from './pages/ApiReferencePage'
+import LessonEnginePage from './pages/LessonEnginePage'
 
 // Dev-only visual review (Agentation + tmux). The condition is static, so production builds drop the import.
 const visualReviewOn = import.meta.env.DEV && import.meta.env.VITE_VISUAL_REVIEW === '1' && Boolean(import.meta.env.VITE_AGENTATION_ENDPOINT)
@@ -36,6 +37,7 @@ const pages = [
   { path: '/git-workflow', label: 'Git workflow', element: <GitWorkflowPage />, group: 'Projects' },
   { path: '/ssh-gate', label: 'SSH forced command', element: <SshForcedCommandPage />, group: 'Projects' },
   { path: '/engine-logic', label: 'Logika silnika', element: <EngineLogicPage />, group: 'Projects' },
+  { path: '/lesson-engine', label: 'Silnik lekcji fajdi', element: <LessonEnginePage />, group: 'Projects' },
   { path: '/api-reference', label: 'API reference', element: <ApiReferencePage />, group: 'Reference' },
 ]
 
